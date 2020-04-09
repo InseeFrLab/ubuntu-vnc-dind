@@ -5,12 +5,12 @@ USER root
 RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y apt-utils apt-transport-https software-properties-common curl iputils-ping vim leafpad libnss3-tools && \
-    apt-key adv --keyserver-options --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && \
-    apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
     apt-get update
 
 ##### Installation Docker
-RUN apt-get install -y docker-engine && \
+RUN apt-get install -y docker-ce && \
     curl -sSL https://raw.githubusercontent.com/docker/docker/master/hack/dind -o /usr/local/bin/dind && \
     chmod a+x /usr/local/bin/dind
 
