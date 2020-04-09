@@ -18,17 +18,34 @@ RUN apt-get install -y docker-engine && \
 RUN touch /etc/chromium-browser/policies/managed/test_policy.json && \
     echo "{\"ExtensionInstallForcelist\": [\"aimiinbnnkboelefkjlenlgimcabobli;https://clients2.google.com/service/update2/crx\"]}" > /etc/chromium-browser/policies/managed/test_policy.json
 
-#### Installation s3cmd
-#RUN apt-get install -y s3cmd
-## install setuptools first
-RUN apt-get install -y python-pip unzip && \
-    pip install --upgrade pip setuptools && \
-    wget https://github.com/s3tools/s3cmd/releases/download/v2.1.0/s3cmd-2.1.0.zip -O s3cmd.zip && \
-    unzip s3cmd.zip && \
-    cd s3cmd-2.1.0/ && \
-    python setup.py install
-ADD .s3cfg .s3cfg
+# Installing s3cmd
 
+RUN wget -O- -q http://s3tools.org/repo/deb-all/stable/s3tools.key | sudo apt-key add -
+RUN wget -O/etc/apt/sources.list.d/s3tools.list http://s3tools.org/repo/deb-all/stable/s3tools.list
+RUN apt install -y s3cmd
+
+# Installing vault
+
+RUN apt-get install -y unzip
+RUN cd /usr/bin && \
+    wget https://releases.hashicorp.com/vault/1.3.4/vault_1.3.4_linux_amd64.zip && \
+    unzip vault_1.3.4_linux_amd64.zip && \
+    rm vault_1.3.4_linux_amd64.zip
+RUN vault -autocomplete-install
+
+# Installing kubectl
+
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl
+RUN apt-get install bash-completion
+
+# Installing helm
+
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
+    chmod 700 get_helm.sh && \
+    ./get_helm.sh
+    
 ##### Clean
 RUN apt-get clean && \
     apt -y autoremove && \
