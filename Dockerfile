@@ -20,8 +20,6 @@ RUN touch /etc/chromium-browser/policies/managed/test_policy.json && \
 
 # Installing s3cmd
 
-RUN wget -O- -q http://s3tools.org/repo/deb-all/stable/s3tools.key | sudo apt-key add -
-RUN wget -O/etc/apt/sources.list.d/s3tools.list http://s3tools.org/repo/deb-all/stable/s3tools.list
 RUN apt install -y s3cmd
 
 # Installing vault
