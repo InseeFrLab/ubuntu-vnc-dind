@@ -18,9 +18,11 @@ RUN apt-get install -y docker-ce && \
 RUN touch /etc/chromium-browser/policies/managed/test_policy.json && \
     echo "{\"ExtensionInstallForcelist\": [\"aimiinbnnkboelefkjlenlgimcabobli;https://clients2.google.com/service/update2/crx\"]}" > /etc/chromium-browser/policies/managed/test_policy.json
 
-# Installing s3cmd
+# Installing mc
 
-RUN apt install -y s3cmd
+RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
+    chmod +x /usr/local/bin/mc
+
 
 # Installing vault
 
